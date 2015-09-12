@@ -6,14 +6,14 @@
 #
 
 release_version="1.0.10"
-release_dir=/tmp/zookeepercli
+release_dir="./tmp/zookeepercli"
 rm -rf $release_dir/*
 mkdir -p $release_dir
 
 cd  $(dirname $0)
 for f in $(find . -name "*.go"); do go fmt $f; done
 
-GOPATH=/usr/share/golang:$(pwd)
+export GOPATH=/usr/share/golang:$(pwd)
 go build -o $release_dir/zookeepercli ./src/github.com/outbrain/zookeepercli/main.go
 
 if [[ $? -ne 0 ]] ; then
@@ -22,8 +22,8 @@ fi
 
 cd $release_dir
 # rpm packaging
-fpm -v "${release_version}" -f -s dir -t rpm -n zookeepercli -C $release_dir --prefix=/usr/bin .
-fpm -v "${release_version}" -f -s dir -t deb -n zookeepercli -C $release_dir --prefix=/usr/bin .
+# fpm -v "${release_version}" -f -s dir -t rpm -n zookeepercli -C $release_dir --prefix=/usr/bin .
+fpm -v "${release_version}" -f -s dir -t deb -n $1 -C $release_dir --prefix=/usr/bin .
 
 echo "---"
 echo "Done. Find releases in $release_dir"
